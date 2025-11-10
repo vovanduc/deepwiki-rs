@@ -1,0 +1,322 @@
+# Litho (deepwiki-rs) - Example Configuration File
+# File cấu hình mẫu cho Litho
+#
+# Copy file này thành litho.toml và chỉnh sửa theo nhu cầu của bạn
+# Copy this file to litho.toml and adjust according to your needs
+#
+# Tham khảo: https://github.com/sopaco/deepwiki-rs
+
+# =============================================================================
+# CƠ BẢN / BASIC CONFIGURATION
+# =============================================================================
+
+# Tên dự án (tùy chọn - nếu không có sẽ tự động lấy từ tên thư mục)
+# Project name (optional - will auto-detect from directory name)
+# project_name = "my-awesome-project"
+
+# Ngôn ngữ đầu ra (en, zh, ja, ko, de, fr, ru)
+# Output language
+target_language = "en"
+
+# =============================================================================
+# LLM CONFIGURATION - CẤU HÌNH MÔ HÌNH AI
+# =============================================================================
+
+[llm]
+# Provider: openai, anthropic, deepseek, gemini, mistral, openrouter, ollama
+# Chọn nhà cung cấp LLM
+provider = "openai"
+
+# API Base URL - URL endpoint của provider
+api_base_url = "https://api.openai.com/v1"
+
+# API Key - Lấy từ biến môi trường LITHO_LLM_API_KEY hoặc điền trực tiếp
+# Khuyến nghị: Dùng biến môi trường để bảo mật
+api_key = "${LITHO_LLM_API_KEY}"
+
+# Model hiệu năng cao (dùng cho phân tích thường xuyên, tiết kiệm chi phí)
+# Efficient model for routine analysis tasks (cost-effective)
+model_efficient = "gpt-4o-mini"
+
+# Model mạnh (dùng cho phân tích phức tạp và tạo tài liệu chất lượng cao)
+# Powerful model for complex reasoning and high-quality documentation
+model_powerful = "gpt-4o"
+
+# Số token tối đa mỗi request
+# Maximum tokens per request
+max_tokens = 16000
+
+# Temperature (0.0-2.0) - Độ sáng tạo của model
+# 0.0 = deterministic (nhất quán), 1.0 = balanced, 2.0 = creative (sáng tạo)
+temperature = 0.1
+
+# Số lần thử lại khi gặp lỗi
+# Number of retry attempts on failure
+retry_attempts = 3
+
+# Thời gian chờ giữa các lần thử lại (milliseconds)
+# Delay between retries (ms)
+retry_delay_ms = 2000
+
+# Timeout cho mỗi request (seconds)
+# Timeout per request (seconds)
+timeout_seconds = 120
+
+# Số lượng tasks chạy song song tối đa
+# Maximum parallel processing tasks
+max_parallels = 3
+
+# Tắt ReAct mode (không tự động quét files qua tool-calls)
+# Disable ReAct mode (no auto-scanning via tool calls)
+disable_preset_tools = false
+
+# =============================================================================
+# CACHE CONFIGURATION - CẤU HÌNH BỘ NHỚ ĐẸM
+# =============================================================================
+
+[cache]
+# Bật/tắt cache (giúp tiết kiệm chi phí và tăng tốc độ)
+# Enable/disable caching (saves cost and speeds up processing)
+enabled = true
+
+# Thư mục lưu cache (mặc định: .litho/cache)
+# Cache directory (default: .litho/cache)
+# cache_dir = ".litho/cache"
+
+# Thời gian sống của cache (giây) - mặc định: 7 ngày
+# Cache TTL in seconds - default: 7 days
+# ttl_seconds = 604800
+
+# =============================================================================
+# FILE IGNORE PATTERNS - CẤU HÌNH BỎ QUA FILES
+# =============================================================================
+
+[ignore_patterns]
+# Các patterns để bỏ qua khi quét project
+# Patterns to ignore when scanning project
+
+# Thư mục
+# Directories
+directories = [
+    "node_modules",
+    "target",
+    "build",
+    "dist",
+    ".git",
+    ".idea",
+    "vendor",
+    "__pycache__",
+]
+
+# File extensions
+# Phần mở rộng file
+extensions = [
+    ".log",
+    ".lock",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".svg",
+    ".woff",
+    ".woff2",
+    ".ttf",
+]
+
+
+# =============================================================================
+# VÍ DỤ CẤU HÌNH CHO CÁC PROVIDERS KHÁC NHAU
+# CONFIGURATION EXAMPLES FOR DIFFERENT PROVIDERS
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# 1. OPENAI (GPT-4, GPT-4o, GPT-4o-mini)
+# Tốt nhất cho: Chất lượng cao, hỗ trợ tốt
+# Best for: High quality, good support
+# Giá: $$$ (cao nhất)
+# Price: $$$ (highest)
+# ---------------------------------------------------------------------------
+# [llm]
+# provider = "openai"
+# api_base_url = "https://api.openai.com/v1"
+# api_key = "${LITHO_LLM_API_KEY}"
+# model_efficient = "gpt-4o-mini"      # ~$0.15/1M tokens input
+# model_powerful = "gpt-4o"            # ~$2.50/1M tokens input
+# max_tokens = 16000
+# temperature = 0.1
+
+# ---------------------------------------------------------------------------
+# 2. ANTHROPIC CLAUDE (Haiku, Sonnet, Opus)
+# Tốt nhất cho: Phân tích code chi tiết, reasoning tốt
+# Best for: Detailed code analysis, excellent reasoning
+# Giá: $$ (trung bình-cao)
+# Price: $$ (medium-high)
+# ---------------------------------------------------------------------------
+# [llm]
+# provider = "anthropic"
+# api_base_url = "https://api.anthropic.com"
+# api_key = "${LITHO_LLM_API_KEY}"
+# model_efficient = "claude-3-haiku-20240307"    # ~$0.25/1M tokens
+# model_powerful = "claude-3-5-sonnet-20241022"  # ~$3.00/1M tokens
+# max_tokens = 8192
+# temperature = 0.1
+
+# ---------------------------------------------------------------------------
+# 3. DEEPSEEK (DeepSeek-Chat, DeepSeek-Coder)
+# Tốt nhất cho: Giá rẻ, phổ biến tại Việt Nam, tốt cho code
+# Best for: Low cost, popular in Vietnam, good for code
+# Giá: $ (rất rẻ)
+# Price: $ (very cheap)
+# ---------------------------------------------------------------------------
+# [llm]
+# provider = "deepseek"
+# api_base_url = "https://api.deepseek.com/v1"
+# api_key = "${LITHO_LLM_API_KEY}"
+# model_efficient = "deepseek-chat"    # ~$0.14/1M tokens - RẤT RẺ!
+# model_powerful = "deepseek-chat"     # Same model for both
+# max_tokens = 8192
+# temperature = 0.1
+
+# ---------------------------------------------------------------------------
+# 4. GOOGLE GEMINI (Flash, Pro)
+# Tốt nhất cho: Context window lớn, multimodal
+# Best for: Large context window, multimodal capabilities
+# Giá: $ (rẻ)
+# Price: $ (cheap)
+# ---------------------------------------------------------------------------
+# [llm]
+# provider = "gemini"
+# api_base_url = "https://generativelanguage.googleapis.com/v1beta"
+# api_key = "${LITHO_LLM_API_KEY}"
+# model_efficient = "gemini-1.5-flash"   # ~$0.075/1M tokens - RẤT RẺ!
+# model_powerful = "gemini-1.5-pro"      # ~$1.25/1M tokens
+# max_tokens = 8192
+# temperature = 0.1
+
+# ---------------------------------------------------------------------------
+# 5. OLLAMA (Local Models - Llama, Mistral, Qwen)
+# Tốt nhất cho: Chạy offline, miễn phí, bảo mật
+# Best for: Offline usage, free, privacy
+# Giá: FREE (cần GPU mạnh)
+# Price: FREE (requires powerful GPU)
+#
+# Cài đặt: https://ollama.ai
+# Setup: Download and install Ollama, then: ollama pull llama3.1
+# ---------------------------------------------------------------------------
+# [llm]
+# provider = "ollama"
+# api_base_url = "http://localhost:11434"
+# api_key = "ollama"  # Ollama không cần API key
+# model_efficient = "llama3.1"         # FREE - chạy local
+# model_powerful = "llama3.1:70b"      # FREE - cần GPU mạnh hơn
+# max_tokens = 4096
+# temperature = 0.1
+# timeout_seconds = 300  # Ollama có thể chậm hơn
+
+# ---------------------------------------------------------------------------
+# 6. OPENROUTER (Access nhiều models)
+# Tốt nhất cho: Linh hoạt, thử nhiều models khác nhau
+# Best for: Flexibility, try different models
+# Giá: Varies (tùy model)
+# ---------------------------------------------------------------------------
+# [llm]
+# provider = "openrouter"
+# api_base_url = "https://openrouter.ai/api/v1"
+# api_key = "${LITHO_LLM_API_KEY}"
+# model_efficient = "meta-llama/llama-3.1-8b-instruct"
+# model_powerful = "anthropic/claude-3.5-sonnet"
+# max_tokens = 8192
+# temperature = 0.1
+
+# ---------------------------------------------------------------------------
+# 7. MISTRAL AI (Mistral Small, Large)
+# Tốt nhất cho: Open models, European provider
+# Best for: Open models, EU-based
+# Giá: $$ (trung bình)
+# ---------------------------------------------------------------------------
+# [llm]
+# provider = "mistral"
+# api_base_url = "https://api.mistral.ai/v1"
+# api_key = "${LITHO_LLM_API_KEY}"
+# model_efficient = "mistral-small-latest"
+# model_powerful = "mistral-large-latest"
+# max_tokens = 8192
+# temperature = 0.1
+
+# =============================================================================
+# KHUYẾN NGHỊ THEO USE CASE
+# RECOMMENDATIONS BY USE CASE
+# =============================================================================
+
+# 🎯 CHO DỰ ÁN NHỎ/VỪA (< 10K files)
+# For Small/Medium Projects
+# Recommendation: DeepSeek hoặc Gemini Flash (rẻ, nhanh)
+# provider = "deepseek" or "gemini"
+# model_efficient = "deepseek-chat" or "gemini-1.5-flash"
+
+# 🎯 CHO DỰ ÁN LỚN/ENTERPRISE (> 10K files)
+# For Large/Enterprise Projects
+# Recommendation: OpenAI GPT-4o hoặc Claude Sonnet (chất lượng cao)
+# provider = "openai" or "anthropic"
+# model_powerful = "gpt-4o" or "claude-3-5-sonnet"
+
+# 🎯 CHO OFFLINE/PRIVACY (không muốn gửi code lên cloud)
+# For Offline/Privacy Concerns
+# Recommendation: Ollama với Llama 3.1 (miễn phí, chạy local)
+# provider = "ollama"
+# model_efficient = "llama3.1"
+
+# 🎯 CHO BUDGET THẤP (tiết kiệm tối đa)
+# For Low Budget (maximum savings)
+# Recommendation: Gemini Flash hoặc DeepSeek
+# model_efficient = "gemini-1.5-flash"  # ~$0.075/1M tokens
+# model_powerful = "gemini-1.5-flash"   # Dùng cùng model cho cả 2
+
+# 🎯 CHO CHẤT LƯỢNG CAO NHẤT (không quan tâm giá)
+# For Highest Quality (cost not a concern)
+# Recommendation: GPT-4o cho efficient + Opus/GPT-4 cho powerful
+# model_efficient = "gpt-4o-mini"
+# model_powerful = "claude-opus-4-20250514"
+
+# =============================================================================
+# LƯU Ý QUAN TRỌNG / IMPORTANT NOTES
+# =============================================================================
+
+# ⚠️ BẢO MẬT API KEY / API KEY SECURITY
+# KHÔNG commit file litho.toml có API key lên Git!
+# DO NOT commit litho.toml with API keys to Git!
+#
+# Cách tốt nhất: Dùng biến môi trường
+# Best practice: Use environment variables
+#   export LITHO_LLM_API_KEY="your-api-key-here"
+#   hoặc/or:
+#   echo 'export LITHO_LLM_API_KEY="sk-xxx"' >> ~/.bashrc
+
+# 💰 THEO DÕI CHI PHÍ / COST MONITORING
+# Luôn kiểm tra usage dashboard của provider để tránh bị tính phí quá mức
+# Always check provider's usage dashboard to avoid unexpected charges
+
+# ⚡ TỐI ƯU HIỆU NĂNG / PERFORMANCE OPTIMIZATION
+# - Tăng max_parallels nếu có nhiều API credits
+# - Giảm max_tokens nếu gặp timeout
+# - Bật cache để tiết kiệm chi phí
+# - Increase max_parallels if you have high API limits
+# - Decrease max_tokens if experiencing timeouts
+# - Enable cache to save costs
+
+# 🔄 CACHE
+# Cache được lưu tại .litho/cache/
+# Xóa cache: rm -rf .litho/cache/
+# Force regenerate: deepwiki-rs --force-regenerate
+
+# 📊 SO SÁNH GIÁ (Input tokens, tháng 1/2025)
+# PRICE COMPARISON (Input tokens, Jan 2025)
+#
+# Gemini Flash:    $0.075/1M  ⭐ RẺ NHẤT
+# DeepSeek:        $0.14/1M   ⭐ RẺ
+# OpenAI 4o-mini:  $0.15/1M
+# Claude Haiku:    $0.25/1M
+# Gemini Pro:      $1.25/1M
+# GPT-4o:          $2.50/1M
+# Claude Sonnet:   $3.00/1M
+# Claude Opus:     $15.00/1M  💰 ĐẮT NHẤT
